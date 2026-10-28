@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+._*
+
+# editors
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Lua
+luac.out
