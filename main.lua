@@ -9,6 +9,7 @@ local OPT = {
 	color = true, -- true → 传 --ansi 输出彩色（由 yazi 的 ANSI 解析器渲染）
 	local_only = true, -- true → 传 --local，不加载远程图片，预览不联网、更快
 	extra = {}, -- 追加给 mdcat 的其它参数，例如 { '--theme', 'dracula' }
+	scroll = 'page', -- 'page' → J/K 一次约半屏；'line' → 一次一行（与内置 code 预览器一致）
 }
 
 --- 遇到错误时给用户看的提示
@@ -87,8 +88,17 @@ function M:seek(job)
 	if not h or h.url ~= job.file.url then
 		return
 	end
-	-- 和内置 code 预览器保持一致的滚动节奏（J / K 一次一行）
-	local step = ya.clamp(-1, job.units, 1)
+
+	local step
+	if OPT.scroll == 'page' then
+		-- 半屏滚动：job.units 通常是 ±5，换算成约 area.h/2 行
+		local mag = math.max(1, math.floor(math.abs(job.units) * job.area.h / 10))
+		step = job.units < 0 and -mag or mag
+	else
+		-- 逐行滚动：与内置 code 预览器一致
+		step = ya.clamp(-1, job.units, 1)
+	end
+
 	ya.emit('peek', {
 		math.max(0, cx.active.preview.skip + step),
 		only_if = job.file.url,

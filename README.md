@@ -1,5 +1,7 @@
 # mdcat.yazi
 
+**简体中文** | [English](README.en.md)
+
 在 [yazi](https://github.com/sxyazi/yazi) 里用 [mdcat](https://github.com/swsnr/mdcat) 预览 Markdown —— 彩色、零配置、不联网。
 
 > 上游 [GrzegorzKozub/mdcat.yazi](https://github.com/GrzegorzKozub/mdcat.yazi) 的 Lua API 与配置字段已不适用于新版 yazi。
@@ -61,10 +63,12 @@ git clone https://github.com/isfk/mdcat.yazi ~/.config/yazi/plugins/mdcat.yazi
 
 | 按键 | 作用 |
 | --- | --- |
-| `J` | 向下滚动预览 |
-| `K` | 向上滚动预览 |
+| `Shift + J` | 向下滚动预览 |
+| `Shift + K` | 向上滚动预览 |
 
-滚动节奏与 yazi 内置的 `code` 预览器一致（一次一行）。
+> 小写 `j` / `k` 是移动文件树光标的，别搞混了。滚动键是**大写**（也就是按住 Shift）。
+
+默认一次滚约半屏。想要跟 yazi 内置 `code` 预览器一样「一次一行」的节奏，把 `OPT.scroll` 改成 `'line'`（见下）。
 
 ## 配置
 
@@ -76,6 +80,7 @@ local OPT = {
 	color = true, -- false → 纯文本，不传 --ansi
 	local_only = true, -- false → 允许加载远程图片（会联网）
 	extra = {}, -- 追加给 mdcat 的参数
+	scroll = 'page', -- 'page' → 一次约半屏；'line' → 一次一行
 }
 ```
 
@@ -113,6 +118,7 @@ prepend_previewers = [
 | mdcat 报错 | 静默 | 显示 stderr |
 | 读取方式 | 逐行累积字符串 | 流式，收满一屏即 `start_kill`，大文件不卡 |
 | 越界滚动 | 可能空白 | 回退到最后一页 |
+| 滚动节奏 | 一次一行 | 默认半屏，可用 `OPT.scroll` 切回一次一行 |
 
 ## 已知限制
 
